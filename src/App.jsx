@@ -27,7 +27,7 @@ const App = () => {
     try {
       const data = await fetchImages(newQuery);
       setImages(data.results);
-    } catch (err) {
+    } catch (error) {
       setError("Something went wrong. Try again later.");
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ const App = () => {
       const data = await fetchImages(query, page + 1);
       setImages((prevImages) => [...prevImages, ...data.results]);
       setPage((prevPage) => prevPage + 1);
-    } catch (err) {
+    } catch (error) {
       setError("Something went wrong. Try again later.");
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <Toaster />
+      <Toaster position="top-right" reverseOrder={false} />
       <SearchBar onSubmit={handleSearch} />
       {error && <ErrorMessage message={error} />}
       <ImageGallery images={images} onImageClick={setSelectedImage} />

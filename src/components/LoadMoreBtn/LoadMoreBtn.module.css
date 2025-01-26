@@ -1,0 +1,24 @@
+.btnLoad {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: #4caf50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.btnLoad:hover {
+  background-color: #044e07;
+  box-shadow: 0 0 5px #044e07;
+  transform: scale(1.05);
+}
+
+.btnLoad:active {
+  background-color: #3e8e41;
+}
