@@ -1,5 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { FaSistrix } from "react-icons/fa";
 import s from "./SearchBar.module.css";
 
 const SearchBar = ({ onSubmit }) => {
@@ -31,8 +32,12 @@ const SearchBar = ({ onSubmit }) => {
           value={searchQuery}
           onChange={handleChange}
         />
-        <button type="submit" className={s.SearchFormButton}>
-          Search
+        <button
+          type="submit"
+          className={s.SearchFormButton}
+          aria-label="Search"
+        >
+          <FaSistrix size={18} />
         </button>
       </form>
     </header>
