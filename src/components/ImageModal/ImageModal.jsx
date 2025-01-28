@@ -1,12 +1,13 @@
-import s from "./ImageModal.module.css";
 import Modal from "react-modal";
+import s from "./ImageModal.module.css";
+
+Modal.setAppElement("#root");
 
 const ImageModal = ({ isOpen, image, onRequestClose }) => {
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="Image Modal"
       className={s.Modal}
       overlayClassName={s.Overlay}
     >
