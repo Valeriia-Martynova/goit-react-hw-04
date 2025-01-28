@@ -8,6 +8,7 @@ const ImageModal = ({ isOpen, image, onRequestClose }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
+      shouldCloseOnOverlayClick={true}
       className={s.Modal}
       overlayClassName={s.Overlay}
     >
