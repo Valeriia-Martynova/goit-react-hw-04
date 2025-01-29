@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
 import { fetchImages } from "./imagesApi";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
@@ -19,46 +19,40 @@ const App = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSearch = async (newQuery) => {
+  useEffect(() => {
+    if (!query) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(false);
+      try {
+        const data = await fetchImages(query, page);
+        setImages((prev) =>
+          page === 0 ? data.images : [...prev, ...data.images]
+        );
+        setTotalPages(data.totalPages);
+        if (data.images.length === 0) {
+          toast.error("No images found. Try a different query.");
+          setError(true);
+        }
+      } catch {
+        toast.error("Something went wrong. Please try again.");
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [query, page]);
+  const handleSearch = (newQuery) => {
     setQuery(newQuery);
     setPage(1);
     setImages([]);
-    setLoading(true);
-    setError(false);
-
-    try {
-      const data = await fetchImages(newQuery, 1);
-      setImages(data.images);
-      setTotalPages(data.totalPages);
-      if (data.images.length === 0) {
-        toast.error("No images found. Try a different query.");
-        setError(true);
-      }
-    } catch {
-      toast.error("Something went wrong. Please try again.");
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
   };
 
-  const handleLoadMore = async () => {
-    if (page >= totalPages) return;
-    setLoading(true);
-    try {
-      const data = await fetchImages(query, page + 1);
-      setImages((prevImages) => {
-        const uniqueImages = data.images.filter(
-          (newImage) => !prevImages.some((image) => image.id === newImage.id)
-        );
-        return [...prevImages, ...uniqueImages];
-      });
-      setPage((prevPage) => prevPage + 1);
-    } catch {
-      toast.error("Something went wrong. Please try again.");
-      setError(true);
-    } finally {
-      setLoading(false);
+  const handleLoadMore = () => {
+    if (page < totalPages) {
+      setPage((prev) => prev + 1);
     }
   };
 
@@ -66,12 +60,6 @@ const App = () => {
     setSelectedImage(image);
     setIsOpen(true);
   };
-  const handleCloseModal = () => {
-    setSelectedImage(null);
-    setIsOpen(false);
-  };
-
-  const isLoadMoreVisible = images.length > 0 && page < totalPages;
 
   return (
     <div className="App">
@@ -81,13 +69,16 @@ const App = () => {
       )}
       <ImageGallery images={images} onImageClick={handleOpenModal} />
       {loading && <Loader />}
-      {isLoadMoreVisible && !loading && (
+      {page < totalPages && images.length > 0 && !loading && (
         <LoadMoreBtn onClick={handleLoadMore} />
       )}
-      {isOpen && (
+      {selectedImage && (
         <ImageModal
           isOpen={isOpen}
-          onRequestClose={handleCloseModal}
+          onRequestClose={() => {
+            setSelectedImage(null);
+            setIsOpen(false);
+          }}
           image={selectedImage}
         />
       )}
