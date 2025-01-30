@@ -46,3 +46,9 @@
 .SearchFormButton:focus {
   outline: none;
 }
+
+@media screen and (max-width: 768px) {
+  .SearchFormInput {
+    color: #213547;
+  }
+}
